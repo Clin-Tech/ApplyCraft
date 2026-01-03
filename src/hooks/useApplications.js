@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "../lib/supabaseClient";
 
 export function useApplications(userId) {
   const [applications, setApplications] = useState([]);
@@ -16,7 +16,7 @@ export function useApplications(userId) {
 
       const { data, error } = await supabase
         .from("applications")
-        .select("id, company, role_title, status, created_at")
+        .select("id, company, role_title, status, location, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 

@@ -13,8 +13,9 @@ import {
   MapPin,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import CustomLoader from "../../../shared/CustomLoader";
 import NoResults from "./NoResults";
+import Loading from "./loading";
+import { useApplications } from "../../../hooks/useApplications";
 
 export default function JobsPage() {
   const [user, setUser] = useState(null);
@@ -41,13 +42,15 @@ export default function JobsPage() {
     loadUser();
   }, []);
 
+  const LIST_FIELDS = "id, company, role_title, status, location, created_at";
+
   useEffect(() => {
     if (!user) return;
 
     async function loadJobs() {
       const { data, error } = await supabase
         .from("applications")
-        .select("*")
+        .select(LIST_FIELDS)
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -57,8 +60,10 @@ export default function JobsPage() {
     loadJobs();
   }, [user]);
 
+  // useApplications(user?.id);
+
   if (loading) {
-    return <CustomLoader message="Loading applications…" />;
+    return <Loading />;
   }
 
   const filteredJobs = jobs.filter((job) => {

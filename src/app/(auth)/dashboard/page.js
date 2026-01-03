@@ -7,8 +7,10 @@ import StatusBadge from "../../../components/StatusBadge";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabaseClient";
-import CustomLoader from "../../../shared/CustomLoader";
 import EmptyState from "./empty";
+import Loading from "./loading";
+
+const DASH_FIELDS = "id, company, role_title, status, location, created_at";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -29,8 +31,9 @@ export default function DashboardPage() {
 
       const { data: jobs, error } = await supabase
         .from("applications")
-        .select("*")
-        .eq("user_id", userId);
+        .select(DASH_FIELDS)
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
       if (!error) setJobs(jobs);
       setLoading(false);
@@ -40,7 +43,7 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <CustomLoader message="Loading dashboard..." />;
+    return <Loading />;
   }
 
   const total = jobs.length;

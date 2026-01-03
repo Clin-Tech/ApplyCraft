@@ -57,7 +57,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-white mx-8 px-9">
+    <div className="w-full min-h-screen bg-white">
       <section className="relative overflow-hidden">
         <div className="absolute top-20 left-20 w-72 h-72 bg-purple-200/40 rounded-full blur-3xl hidden md:block" />
         <div className="absolute bottom-20 right-20 w-80 h-80 bg-blue-200/30 rounded-full blur-3xl hidden md:block" />

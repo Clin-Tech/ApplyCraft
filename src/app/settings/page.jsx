@@ -1,4 +1,3 @@
-// app/settings/page.js - With Full Name field
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
@@ -18,7 +17,7 @@ import {
 export default function SettingsPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [fullName, setFullName] = useState(""); // NEW
+  const [fullName, setFullName] = useState("");
   const [headline, setHeadline] = useState("");
   const [summary, setSummary] = useState("");
   const [skills, setSkills] = useState("");
@@ -62,7 +61,6 @@ export default function SettingsPage() {
     setSaving(true);
     setMessage({ type: "", text: "" });
 
-    // Validation
     if (!fullName.trim()) {
       setMessage({ type: "error", text: "Full name is required" });
       setSaving(false);
@@ -118,7 +116,7 @@ export default function SettingsPage() {
 
     const payload = {
       id: user.id,
-      full_name: fullName, // NEW
+      full_name: fullName,
       headline,
       summary,
       skills: skillArray,
@@ -157,9 +155,8 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
-      {/* Header */}
       <div className="flex items-center gap-4">
-        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-[#8a61ee] to-[#6b46cc] flex items-center justify-center shadow-lg">
+        <div className="h-13 md:h-16 w-13 md:w-16 p-2 md:p-0 rounded-2xl bg-gradient-to-br from-[#8a61ee] to-[#6b46cc] flex items-center justify-center shadow-lg">
           <User className="h-8 w-8 text-white" />
         </div>
         <div>
@@ -170,7 +167,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Info Card */}
       <div className="rounded-2xl bg-blue-50 border border-blue-200 p-6">
         <h3 className="font-semibold text-blue-900 mb-2">
           💡 Why complete your profile?
@@ -185,7 +181,6 @@ export default function SettingsPage() {
         </ul>
       </div>
 
-      {/* Success/Error Message */}
       {message.text && (
         <div
           className={`rounded-2xl border p-4 flex items-start justify-between ${
@@ -217,9 +212,7 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Form */}
       <form onSubmit={handleSave} className="space-y-6">
-        {/* Full Name - NEW */}
         <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-lg">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
@@ -245,14 +238,13 @@ export default function SettingsPage() {
           />
 
           <div className="mt-2 flex justify-between items-center text-xs text-slate-500">
-            <span>
+            <span className="w-[80%] sm:w-0">
               ✍️ Your name will automatically appear at the end of all outreach
             </span>
             <span>{fullName.length}/100</span>
           </div>
         </div>
 
-        {/* Headline */}
         <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-lg">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[#8a61ee] to-[#6b46cc] flex items-center justify-center">
@@ -283,7 +275,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Summary */}
         <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-lg">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
@@ -314,7 +305,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Skills */}
         <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-lg">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
@@ -361,7 +351,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4">
           <button
             type="submit"
@@ -391,7 +380,6 @@ export default function SettingsPage() {
         </div>
       </form>
 
-      {/* Preview Section */}
       {(fullName || headline) && (
         <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6">
           <h3 className="font-semibold text-slate-900 mb-4">
