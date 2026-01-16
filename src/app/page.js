@@ -66,7 +66,7 @@ export default function ImprovedHomePage() {
         <div className="absolute top-20 left-10 w-96 h-96 bg-purple-300 opacity-20 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-blue-300 opacity-20 rounded-full blur-3xl" />
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
+        <div className="relative max-w-6xl mx-auto px-6 pt-10 pb-16">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 text-sm font-semibold mb-6 border border-purple-200">
               <Sparkles className="h-4 w-4" />
