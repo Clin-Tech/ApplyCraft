@@ -12,6 +12,7 @@ import {
   Save,
   X,
   UserCircle,
+  Delete,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -238,7 +239,7 @@ export default function SettingsPage() {
           />
 
           <div className="mt-2 flex justify-between items-center text-xs text-slate-500">
-            <span className="w-[80%] sm:w-0">
+            <span className="w-[80%] sm:w-full">
               ✍️ Your name will automatically appear at the end of all outreach
             </span>
             <span>{fullName.length}/100</span>
@@ -337,8 +338,18 @@ export default function SettingsPage() {
                 skillArray.map((skill, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full border border-purple-200"
+                    className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full relative border border-purple-200"
                   >
+                    <span>
+                      <X
+                        className="absolute right-[-2] top-[-5] h-4 w-4 text-red-500 hover:text-red-500 cursor-pointer ml-1"
+                        onClick={() => {
+                          const newSkills = skills.split(",");
+                          newSkills.splice(i, 1);
+                          setSkills(newSkills.join(","));
+                        }}
+                      />
+                    </span>
                     {skill}
                   </span>
                 ))

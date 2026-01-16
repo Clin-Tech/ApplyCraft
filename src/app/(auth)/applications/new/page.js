@@ -298,13 +298,6 @@ export default function AddJobPage() {
           </div>
         </form>
       </div>
-
-      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4">
-        <p className="text-sm text-blue-900">
-          <strong>📝 Note:</strong> This form doesn't save to a database yet. On
-          Day 3, we'll wire it up to Supabase for real data persistence.
-        </p>
-      </div>
     </div>
   );
 }

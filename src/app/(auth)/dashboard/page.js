@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Plus, TrendingUp, Search, Filter, Clock } from "lucide-react";
+import {
+  Plus,
+  TrendingUp,
+  Search,
+  Filter,
+  Clock,
+  ExternalLink,
+  Sparkles,
+} from "lucide-react";
 import DashboardStatCard from "../../../components/DashboardStatCard";
 import StatusBadge from "../../../components/StatusBadge";
 import { useRouter } from "next/navigation";
@@ -116,37 +124,48 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid sm:grid-cols-3 gap-4">
-        <button className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 hover:border-purple-300 group transition-all text-left">
+        <Link
+          href="/applications"
+          className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 hover:border-purple-300 hover:shadow-lg group transition-all text-left"
+        >
           <div className="flex items-center gap-3 mb-2">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-[#8a61ee] to-[#6b46cc] flex items-center justify-center group-hover:scale-110 transition">
-              <Search className="h-5 w-5 text-white" />
+              <ExternalLink className="h-5 w-5 text-white" />
             </div>
-            <span className="font-semibold text-slate-900">Find Jobs</span>
+            <span className="font-semibold text-slate-900">View All Apps</span>
           </div>
           <p className="text-sm text-slate-600">
-            Browse and save opportunities.
+            Browse {total} application{total !== 1 ? "s" : ""} with filters
           </p>
-        </button>
+        </Link>
 
-        <button className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 hover:border-green-300 group transition-all text-left">
+        <Link
+          href="/applications/new"
+          className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 hover:border-green-300 hover:shadow-lg group transition-all text-left"
+        >
           <div className="flex items-center gap-3 mb-2">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center group-hover:scale-110 transition">
-              <TrendingUp className="h-5 w-5 text-white" />
+              <Plus className="h-5 w-5 text-white" />
             </div>
-            <span className="font-semibold text-slate-900">View Analytics</span>
+            <span className="font-semibold text-slate-900">Add New Job</span>
           </div>
-          <p className="text-sm text-slate-600">Track your progress.</p>
-        </button>
+          <p className="text-sm text-slate-600">Track a new application</p>
+        </Link>
 
-        <button className="p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 hover:border-amber-300 group transition-all text-left">
+        <Link
+          href="/settings"
+          className="p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 hover:border-amber-300 hover:shadow-lg group transition-all text-left"
+        >
           <div className="flex items-center gap-3 mb-2">
             <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center group-hover:scale-110 transition">
-              <Filter className="h-5 w-5 text-white" />
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="font-semibold text-slate-900">Filter Apps</span>
+            <span className="font-semibold text-slate-900">Improve AI</span>
           </div>
-          <p className="text-sm text-slate-600">Organize by status or date.</p>
-        </button>
+          <p className="text-sm text-slate-600">
+            Update profile for better outreach
+          </p>
+        </Link>
       </div>
 
       <section>

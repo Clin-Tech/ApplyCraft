@@ -26,11 +26,11 @@ const Footer = () => {
                   Applications
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="/analytics" className="hover:text-[#8a61ee]">
                   Analytics
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -57,7 +57,8 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-slate-200 mt-10 pt-6 text-center text-xs text-slate-500">
-          © 2025 ApplyCraft. All rights reserved. (ClinTech)
+          © {new Date().getFullYear()} ApplyCraft. All rights reserved.
+          (ClinTech)
         </div>
       </div>
     </footer>

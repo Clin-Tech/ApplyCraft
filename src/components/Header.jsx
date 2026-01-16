@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { Menu, X, Briefcase, LogOut, User, ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
 
 export default function Header() {
@@ -12,6 +12,7 @@ export default function Header() {
   const [user, setUser] = useState(null);
   const [clickedNav, setClickedNav] = useState(null);
   const router = useRouter();
+  const pathname = usePathname();
   const dropdownRef = useRef(null);
 
   const navLinks = [
@@ -64,6 +65,24 @@ export default function Header() {
     return email.substring(0, 2).toUpperCase();
   };
 
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (mounted) setUser(data.user ?? null);
+    })();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (mounted) setUser(session?.user ?? null);
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -77,17 +96,36 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.id}
-              href={link.href}
-              onClick={() => setClickedNav(link.id)}
-              className={` ${clickedNav === 1 ? "text-[#8a61ee] border-b-2 border-[#8a61ee]" : "text-slate-600"} text-sm font-medium  hover:text-[#8a61ee] transition-colors relative group`}
-            >
-              {link.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#8a61ee] group-hover:w-full transition-all duration-300" />
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive =
+              pathname === link.href || pathname.startsWith(link.href + "/");
+
+            const href = user ? link.href : "/login";
+
+            return (
+              <Link
+                key={link.id}
+                href={href}
+                className={[
+                  "text-sm font-medium relative pb-1 transition-colors",
+                  isActive
+                    ? "text-[#8a61ee]"
+                    : "text-slate-600 hover:text-[#8a61ee]",
+                ].join(" ")}
+              >
+                {link.label}
+
+                <span
+                  className={[
+                    "absolute left-0 -bottom-0.5 h-0.5 transition-all duration-300",
+                    isActive
+                      ? "w-full bg-[#8a61ee]"
+                      : "w-0 bg-[#8a61ee] group-hover:w-full",
+                  ].join(" ")}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-4">

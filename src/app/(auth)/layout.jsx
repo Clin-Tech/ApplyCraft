@@ -9,26 +9,26 @@ export default function AuthLayout({ children }) {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
 
-  useEffect(() => {
-    async function verify() {
-      const { data } = await supabase.auth.getSession();
+  // useEffect(() => {
+  //   async function verify() {
+  //     const { data } = await supabase.auth.getSession();
 
-      if (!data.session) {
-        router.replace("/login");
-      }
+  //     if (!data.session) {
+  //       router.replace("/login");
+  //     }
 
-      setChecking(false);
-    }
+  //     setChecking(false);
+  //   }
 
-    verify();
-  }, []);
+  //   verify();
+  // }, []);
 
-  if (checking)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        <CustomLoader message="Checking authentication…" />
-      </div>
-    );
+  // if (checking)
+  // return (
+  //   <div className="min-h-screen flex items-center justify-center text-slate-500">
+  //     <CustomLoader message="Checking authentication…" />
+  //   </div>
+  // );
 
   return <>{children}</>;
 }
