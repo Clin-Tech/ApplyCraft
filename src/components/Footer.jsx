@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -17,20 +17,15 @@ const Footer = () => {
             <h4 className="font-semibold text-slate-900 mb-3">Product</h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li>
-                <a href="/dashboard" className="hover:text-[#8a61ee]">
+                <Link href="/dashboard" className="hover:text-[#8a61ee]">
                   Dashboard
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/applications" className="hover:text-[#8a61ee]">
+                <Link href="/applications" className="hover:text-[#8a61ee]">
                   Applications
-                </a>
+                </Link>
               </li>
-              {/* <li>
-                <a href="/analytics" className="hover:text-[#8a61ee]">
-                  Analytics
-                </a>
-              </li> */}
             </ul>
           </div>
 
@@ -38,18 +33,26 @@ const Footer = () => {
             <h4 className="font-semibold text-slate-900 mb-3">Company</h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li>
-                <a href="#" className="hover:text-[#8a61ee]">
+                <Link href="/about" className="hover:text-[#8a61ee]">
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#8a61ee]">
+                <Link href="/privacy" className="hover:text-[#8a61ee]">
                   Privacy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#8a61ee]">
+                <Link href="/terms" className="hover:text-[#8a61ee]">
                   Terms
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="mailto:clinapp3@gmail.com?subject=ApplyCraft%20Support"
+                  className="hover:text-[#8a61ee]"
+                >
+                  Support
                 </a>
               </li>
             </ul>

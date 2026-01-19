@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabaseClient";
 import EmptyState from "./empty";
 import Loading from "./loading";
+import TestimonialPrompt from "../../../components/TestimonialPrompt";
+import { useRef } from "react";
 
 const DASH_FIELDS = "id, company, role_title, status, location, created_at";
 
@@ -24,6 +26,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const askedRef = useRef(false);
+  const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -43,12 +47,63 @@ export default function DashboardPage() {
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
-      if (!error) setJobs(jobs);
+      if (!error) setJobs(jobs || []);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("review_prompt_state")
+        .eq("id", userId)
+        .maybeSingle();
+
+      const state = profile?.review_prompt_state || "new";
+
+      if (!askedRef.current && (jobs?.length || 0) >= 3 && state === "new") {
+        askedRef.current = true;
+        setShowPrompt(true);
+      }
       setLoading(false);
     }
 
     load();
   }, []);
+
+  const submitReview = async ({ rating, feedback, allowPublic }) => {
+    const { data: sessionRes } = await supabase.auth.getSession();
+    const token = sessionRes?.session?.access_token;
+
+    await fetch("/api/testimonials", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ rating, feedback, allowPublic }),
+    });
+
+    const userId = sessionRes?.session?.user?.id;
+    if (userId) {
+      await supabase
+        .from("profiles")
+        .update({ review_prompt_state: "submitted" })
+        .eq("id", userId);
+    }
+
+    setShowPrompt(false);
+  };
+
+  const dismissReview = async () => {
+    const { data: sessionRes } = await supabase.auth.getSession();
+    const userId = sessionRes?.session?.user?.id;
+
+    if (userId) {
+      await supabase
+        .from("profiles")
+        .update({ review_prompt_state: "dismissed" })
+        .eq("id", userId);
+    }
+
+    setShowPrompt(false);
+  };
 
   if (loading) {
     return <Loading />;
@@ -225,6 +280,12 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
+        {showPrompt && (
+          <TestimonialPrompt
+            onSubmit={submitReview}
+            onDismiss={dismissReview}
+          />
+        )}
       </section>
     </div>
   );

@@ -14,10 +14,19 @@ import {
   Sparkles,
 } from "lucide-react";
 import DashboardPreviewInteractive from "../shared/DashboardPreviewInteractive";
+import FAQSectionAdvanced from "../components/FAQSectionAdvanced";
 
 export default function ImprovedHomePage() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/testimonials")
+      .then((r) => r.json())
+      .then((d) => setTestimonials(d.testimonials || []))
+      .catch(() => setTestimonials([]));
+  }, []);
 
   const features = [
     {
@@ -47,19 +56,6 @@ export default function ImprovedHomePage() {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Software Engineer",
-      text: "Landed 3 interviews in 2 weeks after switching to ApplyCraft.",
-    },
-    {
-      name: "Marcus Johnson",
-      role: "Product Manager",
-      text: "The AI outreach saved me hours. Got responses from 40% of my DMs.",
-    },
-  ];
-
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-white via-purple-50 to-white">
       <section className="relative overflow-hidden">
@@ -80,7 +76,7 @@ export default function ImprovedHomePage() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mt-6 leading-relaxed">
+            <p className="text-lg md:text-2xl text-slate-600 max-w-3xl mx-auto mt-6 leading-relaxed">
               Stop losing applications in spreadsheets. Track, generate
               outreach, and land interviews, all in one place.
             </p>
@@ -173,28 +169,60 @@ export default function ImprovedHomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {testimonials.map((t, i) => (
-              <div
-                key={i}
-                className="p-6 bg-white rounded-2xl border-2 border-slate-200 shadow-lg"
-              >
-                <p className="text-slate-700 text-lg leading-relaxed mb-4">
-                  "{t.text}"
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
-                    {t.name[0]}
+            {testimonials.map((t) => {
+              const fullName = t?.profiles?.full_name?.trim();
+              const headline = t?.profiles?.headline?.trim();
+
+              const displayName = fullName || "Anonymous";
+              const displayRole = headline || "ApplyCraft user";
+              const initial = (displayName?.[0] || "A").toUpperCase();
+
+              return (
+                <div
+                  key={t.id}
+                  className="p-6 bg-white rounded-2xl border-2 border-slate-200 shadow-lg"
+                >
+                  <div className="flex gap-1 mb-3">
+                    {Array.from({ length: Number(t.rating || 0) }).map(
+                      (_, i) => (
+                        <span key={i} className="text-yellow-500">
+                          ★
+                        </span>
+                      ),
+                    )}
                   </div>
-                  <div>
-                    <div className="font-bold text-slate-900">{t.name}</div>
-                    <div className="text-sm text-slate-600">{t.role}</div>
+
+                  <p className="text-slate-700 text-sm md:text-lg leading-relaxed mb-4">
+                    "{t.feedback}"
+                  </p>
+
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                      {initial}
+                    </div>
+
+                    <div>
+                      <div className="font-bold text-slate-900">
+                        {displayName}
+                      </div>
+                      <div className="text-sm text-slate-600">
+                        {displayRole}
+                      </div>
+                      <div className="text-xs text-slate-400 mt-0.5">
+                        {t.created_at
+                          ? new Date(t.created_at).toLocaleDateString()
+                          : ""}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
+
+      <FAQSectionAdvanced />
 
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
@@ -225,7 +253,7 @@ export default function ImprovedHomePage() {
 
       {showDemoModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-screen overflow-auto shadow-2xl">
+          <div className="bg-white rounded-3xl max-w-4xl w-full h-[90vh] overflow-auto shadow-2xl">
             <div className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-3xl font-bold text-slate-900">

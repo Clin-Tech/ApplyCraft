@@ -55,13 +55,13 @@ function extractKeyMatches(skills = [], jd = "", summary = "") {
   const allSkills = Array.isArray(skills) ? skills : [];
 
   const matches = allSkills.filter((skill) =>
-    jdLower.includes(skill.toLowerCase())
+    jdLower.includes(skill.toLowerCase()),
   );
 
   const summaryWords = summaryLower.split(/\s+/);
   const jdWords = new Set(jdLower.split(/\s+/));
   const contextMatches = summaryWords.filter(
-    (w) => w.length > 4 && jdWords.has(w)
+    (w) => w.length > 4 && jdWords.has(w),
   );
 
   return {
@@ -90,7 +90,7 @@ export async function POST(req) {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      { global: { headers: { Authorization: `Bearer ${token}` } } }
+      { global: { headers: { Authorization: `Bearer ${token}` } } },
     );
 
     const { data: userRes, error: userErr } = await supabase.auth.getUser();
@@ -120,7 +120,7 @@ export async function POST(req) {
     const { skillMatches, contextHints } = extractKeyMatches(
       profileSkills,
       jobDescription,
-      profileSummary || ""
+      profileSummary || "",
     );
 
     const matchedSkills =
@@ -261,7 +261,7 @@ Return EXACTLY this JSON structure:
 }`;
 
     console.log(`🤖 Calling Groq API (attempt #${timestamp % 1000})...`);
-    const raw1 = await callGroq(prompt, 0.7); // Increased from 0.35
+    const raw1 = await callGroq(prompt, 0.7);
 
     let parsed = extractJSON(raw1);
 
@@ -282,7 +282,7 @@ Return EXACTLY this JSON structure:
 
     if (tooShort || tooLong) {
       console.log(
-        `⚠️ Output out of range - DM: ${dmWords}w, Email: ${emailWords}w, Cover: ${coverWords}w`
+        `⚠️ Output out of range - DM: ${dmWords}w, Email: ${emailWords}w, Cover: ${coverWords}w`,
       );
 
       const retryPrompt =
