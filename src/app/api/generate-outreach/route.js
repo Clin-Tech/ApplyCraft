@@ -32,6 +32,58 @@ function extractJSON(text) {
   return JSON.parse(candidate);
 }
 
+function formatOutreach(text, type) {
+  if (!text) return "";
+
+  let formatted = text.trim();
+
+  if (type === "dm") {
+    formatted = formatted
+      .replace(/^(Hi[^.!?]*[.!?])\s+/i, "$1\n\n")
+      .replace(
+        /\s+(Would you|I'd love to|Looking forward|Best|Regards|Thanks)/i,
+        "\n\n$1",
+      )
+      .replace(/\n{3,}/g, "\n\n");
+  } else if (type === "email") {
+    formatted = formatted
+      .replace(/(Subject:[^\n]+)(\s+)/i, "$1\n\n")
+      .replace(/^(Hi[^,]*,|Hello[^,]*,|Dear[^,]*,)\s+/im, "$1\n\n")
+      .replace(/([.!?])\s+([A-Z][^.!?]*[.!?]\s+[A-Z][^.!?]*[.!?])/g, "$1\n\n$2")
+      .replace(/\s+(Best regards|Sincerely|Thanks|Looking forward)/i, "\n\n$1")
+      .replace(/\n{3,}/g, "\n\n");
+  } else if (type === "coverLetter") {
+    formatted = formatted
+      .replace(/^(Dear[^,]*,)\s+/im, "$1\n\n")
+      .replace(/([.!?])\s+([A-Z][a-z]+(?:\s+[a-z]+){2,})/g, (match, p1, p2) => {
+        const triggers = [
+          "My",
+          "I'm",
+          "Additionally",
+          "Furthermore",
+          "In my",
+          "During",
+          "At",
+          "With",
+          "This",
+          "I have",
+          "I believe",
+          "I look forward",
+          "Thank you",
+          "I appreciate",
+        ];
+        if (triggers.some((t) => p2.startsWith(t))) {
+          return `${p1}\n\n${p2}`;
+        }
+        return match;
+      })
+      .replace(/\s+(Sincerely|Best regards|Thank you for)/i, "\n\n$1")
+      .replace(/\n{3,}/g, "\n\n");
+  }
+
+  return formatted;
+}
+
 async function callGroq(prompt, temperature = 0.7) {
   const completion = await groq.chat.completions.create({
     model: "llama-3.3-70b-versatile",
@@ -117,7 +169,7 @@ export async function POST(req) {
 
     const candidateName = profileName || "[Your Name]";
 
-    const { skillMatches, contextHints } = extractKeyMatches(
+    const { skillMatches } = extractKeyMatches(
       profileSkills,
       jobDescription,
       profileSummary || "",
@@ -307,6 +359,10 @@ Rewrite to EXACTLY match these word counts. Maintain human, professional tone. U
       console.error("❌ AI output incomplete");
       return json(500, { error: "AI output incomplete. Try again." });
     }
+
+    dm = formatOutreach(dm, "dm");
+    email = formatOutreach(email, "email");
+    coverLetter = formatOutreach(coverLetter, "coverLetter");
 
     console.log("✅ AI generation successful");
     console.log(`   DM: ${wordCount(dm)} words`);
