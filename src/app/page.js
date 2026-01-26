@@ -21,6 +21,26 @@ export default function ImprovedHomePage() {
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [testimonials, setTestimonials] = useState([]);
 
+  const getYouTubeId = (url) => {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes("youtu.be")) return u.pathname.replace("/", "");
+      if (u.searchParams.get("v")) return u.searchParams.get("v");
+      const parts = u.pathname.split("/");
+      const embedIndex = parts.findIndex((p) => p === "embed");
+      if (embedIndex !== -1) return parts[embedIndex + 1];
+      return null;
+    } catch {
+      return null;
+    }
+  };
+
+  const demoUrl = "https://youtu.be/mq191fViIMg?si=QLmX1JxW4N4VDvbq";
+  const videoId = getYouTubeId(demoUrl);
+  const embedSrc = videoId
+    ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1`
+    : null;
+
   useEffect(() => {
     fetch("/api/testimonials")
       .then((r) => r.json())
@@ -267,16 +287,22 @@ export default function ImprovedHomePage() {
                 </button>
               </div>
 
-              <div className="aspect-video bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl flex items-center justify-center mb-6">
-                <div className="text-center">
-                  <Play className="h-20 w-20 text-purple-600 mx-auto mb-4" />
-                  <p className="text-slate-700 font-semibold text-lg">
-                    Video demo would play here
-                  </p>
-                  <p className="text-slate-500 text-sm mt-2">
-                    Embed a Loom/YouTube walkthrough of your app
-                  </p>
-                </div>
+              <div className="aspect-video bg-black rounded-2xl overflow-hidden mb-6">
+                {embedSrc ? (
+                  <iframe
+                    className="w-full h-full"
+                    src={embedSrc}
+                    title="ApplyCraft Product Demo"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    referrerPolicy="strict-origin-when-cross-origin"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white/80">
+                    Invalid demo link
+                  </div>
+                )}
               </div>
 
               <div className="space-y-4">
